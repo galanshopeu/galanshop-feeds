@@ -1,14 +1,14 @@
 name: Build language feeds
 on:
   schedule:
-    - cron: "0 1 * * *"   # каждый день в 01:00 UTC (до обновления Merchant Center)
+    - cron: "0 21 * * *"   # каждый день в 21:00 UTC (22:00 по Центральной Европе), до забора файлов Merchant Center в 00:00
   workflow_dispatch: {}
 permissions:
   contents: write
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 180
+    timeout-minutes: 150
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -22,6 +22,6 @@ jobs:
         run: |
           git config user.name "feed-bot"
           git config user.email "feed-bot@users.noreply.github.com"
-          git add docs
+          git add docs cache.json
           git diff --cached --quiet || git commit -m "Update feeds"
           git push
